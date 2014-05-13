@@ -45,7 +45,7 @@ class Main extends PollingScript[ClientContext] with PaintListener {
         else
           if(ctx.bank.open()) sleep(!ctx.bank.opened, 5000)
       } else {
-        if(ctx.bank.opened) ctx.bank.close()
+         ctx.bank.close()
       }
     }
   }
