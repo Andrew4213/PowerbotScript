@@ -12,7 +12,7 @@ import it.scripted.sdp.Strategy
  */
 @Script.Manifest(name = "Wine Drinker", description = "Drinks wine", properties = "")
 class Main extends PollingScript[ClientContext] with PaintListener {
-  val wine = 1993
+  val Wine = 1993
   val tasks = Array(new Bank, new Drink)
   var task:Strategy = _
 
@@ -27,11 +27,11 @@ class Main extends PollingScript[ClientContext] with PaintListener {
   }
 
   class Bank extends Strategy("Banking.") {
-    override def active = ctx.bank.opened || wine.toItem.count == 0
+    override def active = ctx.bank.opened || Wine.toItem.count == 0
     override def execute {
-      if(wine.toItem.count == 0)
+      if(Wine.toItem.count == 0)
         if(ctx.bank.opened())
-          if(ctx.backpack.select.count == 0) if(wine.toItem.poll.stackSize > 0) ctx.bank.withdraw(wine, Bank.Amount.ALL) else ctx.controller.stop()
+          if(ctx.backpack.select.count == 0) if(Wine.toItem.poll.stackSize > 0) ctx.bank.withdraw(Wine, Bank.Amount.ALL) else ctx.controller.stop()
           else ctx.bank.depositInventory()
         else if(ctx.bank.open()) sleep(!ctx.bank.opened, 5000)
       else ctx.bank.close()
@@ -39,10 +39,10 @@ class Main extends PollingScript[ClientContext] with PaintListener {
   }
 
   class Drink extends Strategy("Drinking wine.") {
-    override def active = wine.toItem.count > 0 && !ctx.bank.opened
+    override def active = Wine.toItem.count > 0 && !ctx.bank.opened
     override def execute {
-      val wines = wine.toItem.count
-      if(wines >= 1) if(wine.toItem.peek.interact("Drink")) sleep(wines == wine.toItem.count, 1500, 600)
+      val wines = Wine.toItem.count
+      if(wines >= 1) if(Wine.toItem.peek.interact("Drink")) sleep(wines == Wine.toItem.count, 1500, 600)
     }
   }
 
