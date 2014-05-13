@@ -29,24 +29,12 @@ class Main extends PollingScript[ClientContext] with PaintListener {
   class Bank extends Strategy("Banking.") {
     override def active = ctx.bank.opened || wine.toItem.count == 0
     override def execute {
-      if(wine.toItem.count == 0) {
+      if(wine.toItem.count == 0)
         if(ctx.bank.opened())
-          if(ctx.backpack.select.count == 0) {
-            if(wine.toItem.poll.stackSize > 0) {
-              println("Banking")
-              ctx.bank.withdraw(wine, Bank.Amount.ALL)
-            } else {
-              println("Stopping.")
-              ctx.controller.stop()
-            }
-          } else {
-            ctx.bank.depositInventory()
-          }
-        else
-          if(ctx.bank.open()) sleep(!ctx.bank.opened, 5000)
-      } else {
-         ctx.bank.close()
-      }
+          if(ctx.backpack.select.count == 0) if(wine.toItem.poll.stackSize > 0) ctx.bank.withdraw(wine, Bank.Amount.ALL) else ctx.controller.stop()
+          else ctx.bank.depositInventory()
+        else if(ctx.bank.open()) sleep(!ctx.bank.opened, 5000)
+      else ctx.bank.close()
     }
   }
 
@@ -54,10 +42,7 @@ class Main extends PollingScript[ClientContext] with PaintListener {
     override def active = wine.toItem.count > 0 && !ctx.bank.opened
     override def execute {
       val wines = wine.toItem.count
-      if(wines >= 1) {
-        val win = wine.toItem.peek
-        if(win.interact("Drink")) sleep(wines == wine.toItem.count, 1500, 600)
-      }
+      if(wines >= 1) if(wine.toItem.peek.interact("Drink")) sleep(wines == wine.toItem.count, 1500, 600)
     }
   }
 
